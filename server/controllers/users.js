@@ -15,6 +15,7 @@ exports.register = function(req, res){
 exports.login = function(req, res){
   User.login(req.body, function(err, user){
     if(user){
+      console.log('back in controller', user);
       req.session.regenerate(function(){
         req.session.userId = user._id;
         req.session.save(function(){

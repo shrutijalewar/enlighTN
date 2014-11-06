@@ -8,9 +8,9 @@ var bcrypt     = require('bcrypt'),
     underscore = require('underscore');
 
 function User(o){
-  if(o._id){this._id = o._id;}
+  this._id = o._id || Mongo.ObjectID();
   this.email = o.email;
-  this.name = o.name;
+  this.name = o.name || 'Please Add';
   this.password = o.password;
   this.favoriteLocations = [];
   this.RSVP = [];
@@ -30,12 +30,12 @@ User.register = function(o, cb){
   User.collection.findOne({email:o.email}, function(err, user){
     if(user || o.password.length < 3){return cb();}
     o.password = bcrypt.hashSync(o.password, 10);
-    User.collection.save(o, cb);
+    User.collection.save(new User(o), cb);
   });
 };
 
 User.login = function(o, cb){
-  User.collection.findOne({username:o.username}, function(err, user){
+  User.collection.findOne({email:o.email}, function(err, user){
     if(!user){return cb();}
     var isOk = bcrypt.compareSync(o.password, user.password);
     if(!isOk){return cb();}

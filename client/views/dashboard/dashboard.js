@@ -38,7 +38,7 @@
       };
       User.update(user).then(function(response){
         toastr.success('Your info has been updated.');
-        $scope.toggleEdit();
+        $scope.form = !$scope.form;
       });
     };
 
